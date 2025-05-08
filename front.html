@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+
+    <!--link à l'api des fonts de google-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!--Ma font importée-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Alerte -->
+    <div id="alertes">
+        <!-- Conteneur des alertes -->
+    </div>
+
+    <div id="prompt">
+        <div id="prompt-box">
+            <h3 id="prompt-title"></h3>
+            <div id="prompt-input-container">
+
+            </div>
+        </div>
+    </div>
+
+    <p class="fake-button fixed" onclick="getTaches()" >Rafraichir</p>
+
+
+    <!-- Écran de connection -->
+    <div id="ecran-connection">
+        <div class="group">
+            <h3>Écran de connexion</h3>
+            <div class="group">
+
+                <!--Créer un compte-->
+                <div class="group">
+
+                    <!--Se connecter-->
+                    <div class="label-input-pair">
+                        <label>Courriel</label>
+                        <input type="text" id="input-courriel">
+                    </div>
+                    <div class="label-input-pair">
+                        <label>Mot de Passe</label>
+                        <!-- Plus chiant pour tester, mais mieux pour une release
+                        <input type="password" id="input-mdp">
+                        -->
+                        <input type="text" id="input-mdp">
+                    </div>
+                    <p class="fake-button" onclick="connexion()" id="input-connexion">Se connecter</p>
+                    
+                </div>
+                <div class="label-input-pair">
+                    <label>Nom</label>
+                    <input type="text" id="input-nom">
+                </div>
+                <div class="label-input-pair">
+                    <label>Prénom</label>
+                    <input type="text" id="input-prenom">
+                </div>
+                <p class="fake-button" id="input-inscription" onclick="inscription()">S'inscrire</p>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Page principale -->
+    <div id="ecran-principal">
+
+        <h1>Liste des tâches</h1>
+        <div><p class="inline">Clé d'API: </p><p id="cle-api" class="blur inline">Chargement...</p><p class="fake-button inline" onclick="rafraichirCle()">rafraichir</p></div>
+        <div id="taches">
+            <!--Container des tâches-->
+        </div>
+        <h3 id="ajouter-tache" onclick="addTache()">+</h3>
+    
+    </div>
+
+    <style>
+        :root {
+            --theme-comment:    #ffffff2f;
+            --theme-floating:   #0000001c;
+            --theme-floating-hard:#00000042;
+            --theme-shadow:     #09192b;
+            --theme-dark:       #143c67;
+            --theme-primary:    #5986b6;
+            --theme-light:      #cee6ff;
+            --theme-error:      #f3497375;
+            --theme-success:    #a4f34975;
+        }
+
+        *{
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+            color: var(--theme-light);
+            transition: all;
+            transition-duration: 250ms;
+        }
+
+        body {
+            background-color: var(--theme-dark);
+
+            #ecran-connection{
+                position:absolute;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 80vh;
+                display: flex;
+                justify-content: center;
+                padding-top: 10vh;
+                backdrop-filter: blur(3px);
+
+                div.group{
+                    background-color: var(--theme-floating);
+                    padding: 2em;
+                    padding-top: 0;
+                    border-radius: 10px;
+                    height: fit-content;
+                    backdrop-filter: blur(3px);
+
+                    div.group{ /* créer un compte */
+                        padding: 1em;
+                        padding-bottom: 0;
+                    }
+                }
+            }
+
+            #prompt{
+                position: absolute;
+                top: 0;
+                left: 0;
+                margin: 0;
+                padding: 0;
+                width: 100vw;
+                height: 100vh;
+
+                display: none;
+                justify-content: center;
+                align-items: center;
+
+                backdrop-filter: blur(5px);
+
+                z-index: 10;
+
+                #prompt-box{
+                    background-color: var(--theme-floating);
+                    padding: 2em;
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    border-radius: 10px;
+                    height: fit-content;
+
+                    #prompt-input-container{
+                        display: flex;
+                        justify-content: space-around;
+                    }
+                }
+            }
+
+            #ecran-principal{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                #taches{
+                    height: min(70vh, fit-content);
+                    width: 70vw;
+                    background-color: var(--theme-floating);
+                    padding: 1vw;
+                    border-radius: 5px;
+                    overflow-y: scroll;
+
+                    .tache{
+                        height: min(10vh, fit-content);
+                        display: grid;
+                        grid-template-columns: 1fr 1em;
+                        gap: 0.5vw;
+                        padding-top: 0.5vh;
+                        padding-left: 0.5vw;
+                        padding-bottom: 0.5vh;
+                        padding-right: 0.5vw;
+                        border-radius: 5px;
+                        *{
+                            margin: 0;
+                        }
+                        div.tache-infos{
+                            display: flex;
+                            justify-content: space-between;
+                            padding-top: 0.5vh;
+                            padding-left: 0.5vw;
+                            padding-bottom: 0.5vh;
+                            padding-right: 0.5vw;
+                            border-radius: 5px;
+                            
+                            background-color: var(--theme-floating);
+                            div.tache-modifiables{
+                                width: 50vw;
+                                h3{
+                                width: fit-content;
+                                height: 1em;
+                                }
+                                h3, div{
+                                    position:static;
+                                }
+                                .tache-description{
+                                    overflow-y: scroll;
+                                    height: 10vh;
+                                    padding: 0.2em;
+                                    border-radius: 5px;
+                                }
+                                .sous-taches{
+                                    .sous-tache{
+                                        display: flex;
+                                        p, input{
+                                            margin-right: 1vw;
+                                        }
+                                        input{
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                        }
+                                    }
+                                    p{
+                                        height: fit-content;
+                                    }
+                                }
+                            }
+                        }
+                        div.tache-controles{
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            *{
+                                margin-bottom: 1vh;
+                                cursor: pointer;
+                                text-align: center;
+                            }
+                            p{
+                                border-radius: 5px;
+                                font-size: 1.2em;
+                                width: 1.4vw;
+                                text-align: center;
+                            }
+                            p:hover{
+                                color: var(--theme-primary);
+                            }
+                        }
+                    }
+                }
+                #ajouter-tache{
+                    cursor: pointer;
+                }
+                #ajouter-tache:hover{
+                    text-shadow: 1px 1px 1px var(--theme-shadow);
+                    transform:scale(125%);
+                }
+                div{
+                    margin-top: 1vh;
+                }
+            }
+        }
+        input[type="text"], input[type="password"], input[type="date"], textarea{
+            border: none;
+            outline: none;
+            background-color: var(--theme-floating-hard);
+            border-radius: 4px;
+            padding-left: 0.25em;
+            backdrop-filter: blur(5px);
+        }
+        input[type="checkbox"]{
+            appearance: none;
+            width: 1.4vw;
+            height: 1.4vw;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            background-color: var(--theme-floating);
+            border-radius: 4px;
+        }
+        input[type="checkbox"]:checked {
+            background-color: var(--theme-primary);
+            box-shadow: inset 0px 0px 15px var(--theme-dark);
+        }
+        input[type="checkbox"]:checked::after{
+            content: "✅";
+        }
+        .label-input-pair{
+            padding: 0;
+            background-color: transparent;
+            display: flex;
+            justify-content: space-between;
+            *{
+                margin: 5px;
+            }
+        }
+        .group{
+            display: flex;
+            flex-direction: column;
+        }
+        .fake-button{
+            background-color: var(--theme-dark);
+            padding: 0.2em;
+            padding-left: 0.4em;
+            padding-right: 0.4em;
+            border-radius: 5px;
+            width: fit-content;
+            cursor: pointer;
+        }
+        .fake-button:hover{
+            box-shadow: 0px 0px 10px var(--theme-shadow);
+        }
+        .complete .tache-infos, p.complete{
+            pointer-events: none;
+            filter: opacity(0.4);
+        }
+        .editable{
+            cursor: pointer;
+        }
+        .editable:hover{
+            text-shadow: 2px 2px 1px var(--theme-shadow);
+            
+        }
+        .rotate45{
+            transform: rotate(45deg);
+        }
+        h3{
+            text-align: center;
+            font-weight: 500;
+        }
+        h1{
+            text-align: center;
+            margin: 1vh;
+        }
+        p{
+            text-shadow: 1px 1px 1px var(--theme-shadow);
+        }
+        #alertes{
+            padding-top: 1vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: none;
+
+            *{
+                pointer-events: none;
+            }
+
+            p{
+                margin: 0.25vh;
+                background-color: var(--theme-success);
+                width: 50vw;
+                padding-top: 0.1em;
+                padding-bottom: 0.1em;
+                border-radius: 5px;
+                text-align: center;
+                backdrop-filter: blur(1px);
+                z-index: 1000;
+            }
+        }
+        .inline{
+            display: inline;
+        }
+        .fixed{
+            position: fixed;
+        }
+        .blur{
+            filter: blur(5px);
+            cursor: default;
+            background-color: var(--theme-floating);
+            border-radius: 5px;
+            padding-left: 0.2em;
+            padding-right: 0.2em;
+        }
+        .blur:hover{
+            filter: none;
+        }
+        .discret{
+            color: var(--theme-comment);
+            text-shadow: none;
+            font-size: 0.75em;
+        }
+    </style>
+    <script defer>
+        /*
+            IMPORTANT:
+            je ne me suis pas rendu compte que tu voulais pas un frontend CRUD,
+            donc voilà.
+            les méthodes qui te sont utiles sont celles-ci:
+            - rafraichirCle() [ligne 493]
+            - connexion() [ligne 518]
+            - inscription [ligne 563]
+            Elles sont toutes une après l'autre dans l'ordre mentionné.
+        */
+
+
+
+
+        const APIURL = "http://localhost:3000/api/"
+        const ELEMENTS = {
+            courriel : document.getElementById("input-courriel"),
+            mdp : document.getElementById("input-mdp"),
+            nom : document.getElementById("input-nom"),
+            prenom: document.getElementById("input-prenom"),
+
+            alertes: document.getElementById("alertes"),
+            taches: document.getElementById("taches"),
+
+            connexion: document.getElementById("input-connexion"),
+            inscription: document.getElementById("input-inscription"),
+
+            ecranConnexion: document.getElementById("ecran-connection"),
+            cleApi: document.getElementById("cle-api")
+        }
+        let values = {
+            courriel : "",
+            mdp : "",
+            nom : "",
+            prenom : "",
+        }
+
+        let cleApi = ""
+
+        function refreshValues(){
+            Object.entries(ELEMENTS).forEach(([key, value]) => {
+                if (values[key] != undefined)
+                    values[key] = ELEMENTS[key].value
+            })
+        }
+
+
+        let alertCount = 0
+        async function newAlert(msg, error = false){
+            let length = 5000 //ms
+
+            alertCount++
+            let id = "alerte"+alertCount
+            let alerte = document.createElement("p")
+            alerte.id = id
+            alerte.innerText = msg
+            alerte.className = "alertes-message"
+
+            if (error)
+                alerte.style.backgroundColor = "var(--theme-error)"
+            else
+                alerte.style.backgroundColor = "var(--theme-success)"
+
+            ELEMENTS.alertes.appendChild(alerte)
+
+            setTimeout(()=>{
+                document.getElementById(id).style.animationDuration = length/2+"ms"
+                document.getElementById(id).style.opacity = "0";
+                setTimeout(()=>{
+                    document.getElementById(id).remove()
+                }, length/4)
+                
+            }, length/2)
+        }
+
+        async function errorField(element, success = false){
+            let length = 2500 //ms
+            let ogColor = element.style.backgroundColor
+
+            if (element.style.backgroundColor == "var(--theme-error)" || element.style.backgroundColor == "var(--theme-success)") return
+
+            element.style.animationDuration = 0+"ms"
+            if (success){
+                element.style.backgroundColor = "var(--theme-success)"
+                element.style.boxShadow = " 0px 0px 5px var(--theme-success)"
+            }else{
+                element.style.backgroundColor = "var(--theme-error)"
+                element.style.boxShadow = " 0px 0px 5px var(--theme-error)"
+            }
+            setTimeout(() => {
+                element.style.animationDuration = (length/2)+"ms"
+                element.style.backgroundColor = ogColor
+                element.style.boxShadow = "none"
+            }, length/2)
+        }
+
+        async function rafraichirCle(){
+            if (!cleApi) return
+
+            ELEMENTS.cleApi.innerText = "Chargement..."
+
+            let url = APIURL+'utilisateurs?cle='+cleApi+'&new=true'
+
+            console.log(url)
+
+            let response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            let body = await response.json()
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message)
+                errorField(ELEMENTS.connexion)
+            }
+            else{
+                cleApi = body.cle_api
+                ELEMENTS.cleApi.innerText = cleApi
+            }
+        }
+
+        async function connexion(){
+            refreshValues()
+
+            let invalid = false
+            if (!values.courriel){
+                errorField(ELEMENTS.courriel)
+                newAlert("Champ 'Courriel' vide.", true)
+                invalid = true
+            }
+            if (!values.mdp){
+                errorField(ELEMENTS.mdp)
+                newAlert("Champ 'Mot de passe' vide.", true)
+                invalid = true
+            }
+            if (invalid) return
+
+            let response = await fetch(APIURL+'utilisateurs?courriel='+values.courriel+'&password='+values.mdp, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+            })
+            
+            let body = await response.json()
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message)
+                errorField(ELEMENTS.connexion)
+            }
+            else{
+                cleApi = body.cle_api
+                errorField(ELEMENTS.connexion, true)
+                newAlert("Connexion réussie!")
+                ELEMENTS.cleApi.innerText = cleApi
+
+                getTaches()
+
+                //animation de fade out
+                let timeout = "250ms"
+                ELEMENTS.ecranConnexion.style.animationDuration = timeout
+                ELEMENTS.ecranConnexion.style.opacity = 0
+                setTimeout(()=>{
+                    ELEMENTS.ecranConnexion.style.zIndex = "-10"
+                }, timeout.substring(0, timeout.length-2))
+            }
+        }
+
+        async function inscription(){
+            refreshValues()
+
+            let invalid = false
+            if (!values.courriel){
+                errorField(ELEMENTS.courriel)
+                newAlert("Champ 'Courriel' vide.", true)
+                invalid = true
+            }
+            if (!values.mdp){
+                errorField(ELEMENTS.mdp)
+                newAlert("Champ 'Mot de passe' vide.", true)
+                invalid = true
+            }
+            if (!values.nom){
+                errorField(ELEMENTS.nom)
+                newAlert("Champ 'Nom' vide.", true)
+                invalid = true
+            }
+            if (!values.prenom){
+                errorField(ELEMENTS.prenom)
+                newAlert("Champ 'Prénom' vide.", true)
+                invalid = true
+            }
+            if (invalid) return
+
+            let response = await fetch(APIURL+'utilisateurs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    "courriel": values.courriel,
+                    "password": values.mdp,
+                    "nom": values.nom,
+                    "prenom": values.prenom
+                })
+            })
+
+            let body = await response.json()
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message);
+                errorField(ELEMENTS.inscription)
+            }
+            else{
+                cleApi = body.cle_api
+                errorField(ELEMENTS.inscription, true)
+                newAlert("Inscription réussie!")
+                connexion()
+            }
+        }
+
+
+        async function ajouterTache(tacheJson){
+
+            //objet principal
+            let tacheElem = document.createElement("div")
+            tacheElem.className = "tache"
+            tacheElem.id = "tache"+tacheJson.id
+
+            let titre = tacheJson.titre
+            let description = tacheJson.description
+            let date_debut = new Date(tacheJson.date_debut).toISOString().substring(0,10)
+            let date_echeance = new Date(tacheJson.date_echeance).toISOString().substring(0,10)
+            let complete = tacheJson.complete
+
+            let id = tacheJson.id
+            let innerHTML = `
+                <div class="tache-infos" id="info${id}">
+                    <div class="tache-modifiables" id="modifiables${id}">
+                        <h3 class="editable" id="titre${id}" onclick="changerTitre(${id})">${titre}</h3>
+                        <div>
+                            <p class="discret inline">Échéance : </p>
+                            <p class="discret inline editable" id="echeance${id}" onclick="changerEcheance(${id})">${date_echeance}</p>
+                        </div>
+                        
+                        <p class="tache-description editable" id="description${id}"" onclick="changerDescription(${id})">${description}</p>
+
+                        <div class="sous-taches" id="sous-taches${id}">
+                            ${creerSousTaches(tacheJson)}
+                            <p class="fake-button" onclick="addSousTache(${id})">+</p>
+                        </div>
+                    </div>
+                    <div class="tache-non-modifiables" id="non-modifiables${id}">
+                        <div>
+                            <p class="discret inline">Date de début : </p>
+                            <p class="discret inline" id="debut${id}">${date_debut}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tache-controles">
+                    <input type="checkbox" id="complete${id}" oninput="completer(${id})" ${boolToChecked(complete)}>
+                    <p onclick="deleteTache(${id})" class="rotate45">+</p>
+                </div>
+            `
+            
+            tacheElem.innerHTML = innerHTML
+            if (complete) tacheElem.classList.add("complete")
+            
+            ELEMENTS.taches.appendChild(tacheElem)
+        }
+
+        function creerSousTaches(tacheJson){
+            let out = ""
+            for (sousTache of tacheJson.sousTaches){
+                let id = sousTache.id
+                let tacheId = sousTache.tache_id
+                let titre = sousTache.titre
+                let complete = sousTache.complete
+
+                let completeClass = ""
+                if (complete) completeClass = "complete"
+
+                out += `
+                    <div class="sous-tache" id="sous-tache${id}">
+                        <p id="sous-tache-tache-id${id}" hidden>${tacheId}</p>
+                        <p class="rotate45 editable" onclick="deleteSousTache(${id})">+</p>
+                        <input type="checkbox" id="sous-tache-complete${id}" onclick="completerSousTache(${id})" ${boolToChecked(complete)}>
+                        <p class="editable ${completeClass}" id="sous-tache-titre${id}" onclick="changerTitreSousTache(${id})">${titre}</p>
+                    </div>
+                `
+            }
+            return out
+        }
+
+        function boolToChecked(bool){
+            if (bool || bool === 1 || bool === "1"){
+                return "checked"
+            }
+            else return ""
+        }
+
+        async function getTaches(){
+            ELEMENTS.taches.innerHTML = "";
+
+            let response = await fetch(APIURL+'taches', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json', 'authentification': cleApi},
+            })
+            
+            let body = await response.json()
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message);
+                errorField(ELEMENTS.connexion)
+            }
+            else{
+                newAlert("Tâches trouvés avec succès")
+            }
+
+            for (let hit of body.resultats){
+                ajouterTache(hit)
+            }
+        }
+
+        function completer(id){
+            let v = document.getElementById("complete"+id).checked
+            if (!v) {
+                document.getElementById("tache"+id).classList.remove("complete")
+            }
+            else{
+                document.getElementById("tache"+id).classList.add("complete")
+            }
+            changerComplete(id)
+        }
+
+        function completerSousTache(id){
+            let v = document.getElementById("sous-tache-complete"+id).checked
+            if (!v) {
+                document.getElementById("sous-tache-titre"+id).classList.remove("complete")
+            }
+            else{
+                document.getElementById("sous-tache-titre"+id).classList.add("complete")
+            }
+            changerCompleteSousTache(id)
+        }
+
+        async function deleteTache(id){
+            await promptBool("Supprimer la tâche?", "Oui", "Non")
+            .then((valide)=>{
+                if (valide){
+                    return fetch(APIURL+'taches', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                        body: JSON.stringify({
+                            tache_id:id
+                        })
+                    })
+                }
+            })
+            .then((response)=>{
+                if(response){
+                    response.json().then((body)=>{
+                        if (!response.ok) {
+                            newAlert(body.message, true)
+                            console.log("Erreur : " + body.message)
+                            errorField(ELEMENTS.connexion)
+                        }
+                        else
+                        document.getElementById("tache"+id).remove()
+                    })
+                }
+            })
+        }
+        async function deleteSousTache(id){
+            promptBool("Supprimer la sous-tâche?", "Oui", "Non")
+            .then((valide)=>{
+                if (valide){
+                    return fetch(APIURL+'taches/sous', {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                        body: JSON.stringify({
+                            sous_tache_id:id
+                        })
+                    })
+                }
+            }).then((response)=>{
+                if (response){
+                    response.json().then((body)=>{
+                        if (!response.ok) {
+                            newAlert(body.message, true)
+                            console.log("Erreur : " + body.message)
+                            errorField(ELEMENTS.connexion)
+                        }
+                        document.getElementById("sous-tache"+id).remove()
+                    })
+                }
+            })
+        }
+
+        async function addTache(){
+            await promptAjouter()
+            .then((data)=>{
+                return fetch(APIURL+'taches', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                        body: JSON.stringify(data)
+                    })
+            })
+            .then((response)=>{
+                if(response){
+                    let body = response.json()
+                    if (!response.ok) {
+                        newAlert(body.message, true)
+                        console.log("Erreur : " + body.message)
+                        errorField(ELEMENTS.connexion)
+                    }
+                    else getTaches()
+                }
+            })
+        }
+        async function addSousTache(tache_id){
+            await promptText("Ajouter une sous-tâche","Titre")
+            .then((text)=>{
+                return fetch(APIURL+'taches/sous', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                    body: JSON.stringify({tache_id:tache_id,titre:text})
+                })
+            })
+            .then((response)=>{
+                if(response){
+                    response.json().then((body)=>{
+                        if (!response.ok) {
+                            newAlert(body.message, true)
+                            console.log("Erreur : " + body.message)
+                            errorField(ELEMENTS.connexion)
+                        }
+                        else getTaches()
+                    })
+                }
+            })
+        }
+
+        async function changerTache(id, titre, description, date_echeance, complete){
+            let dontRefresh = !titre && !description && !date_echeance
+            if (!titre) titre = document.getElementById("titre"+id).innerText
+            if (!description) description = document.getElementById("description"+id).innerText
+            if (!date_echeance) date_echeance = document.getElementById("echeance"+id).innerText
+            if (!complete) complete = document.getElementById("complete"+id).checked
+
+            let data = {
+                tache_id:id,
+                titre:titre,
+                description:description,
+                date_echeance:date_echeance,
+                complete:complete
+            }
+            let response = await fetch(APIURL+'taches', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                        body: JSON.stringify(data)
+            })
+
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message)
+                errorField(ELEMENTS.connexion)
+            }
+
+            if (!dontRefresh) getTaches()
+        }
+
+        async function changerSousTache(id, titre, complete){
+            let dontRefresh = false
+            if (!titre){
+                titre = document.getElementById("sous-tache-titre"+id).innerText
+                dontRefresh = true
+            }
+            if (!complete) complete = document.getElementById("sous-tache-complete"+id).checked
+
+            let data = {
+                sousTacheId: id,
+                titre   : titre,
+                complete: complete
+            }
+
+            let response = await fetch(APIURL+'taches/sous', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json', 'authentification':cleApi },
+                        body: JSON.stringify(data)
+            })
+            let body = await response.json()
+            if (!response.ok) {
+                newAlert(body.message, true)
+                console.log("Erreur : " + body.message)
+                errorField(ELEMENTS.connexion)
+            }
+            if (!dontRefresh) getTaches()
+        }
+
+        async function changerTitre(id){
+            await promptText("Changer le titre de la tâche", "Titre:", document.getElementById("titre"+id).innerText)
+            .then((text)=>{
+                changerTache(id, text)
+            }).catch((_)=>{})
+        }
+        
+        async function changerTitreSousTache(id){
+            await promptText("Changer le titre de la sous-tâche", "Titre:", document.getElementById("sous-tache-titre"+id).innerText)
+            .then((text)=>{
+                changerSousTache(id, text)
+            }).catch((_)=>{})
+        }
+
+        async function changerDescription(id){
+            await promptTextArea("Changer la description", "", document.getElementById("description"+id).innerText)
+            .then((text)=>{
+                changerTache(id, undefined, text)
+            }).catch((_)=>{})
+        }
+
+        async function changerEcheance(id){
+            await promptDate("Changer la date d'échéance", "Échéance")
+            .then((date)=>{
+                changerTache(id, undefined, undefined, date)
+            }).catch((_)=>{})
+        }
+
+        async function changerComplete(id){
+            changerTache(id, undefined, undefined, undefined, document.getElementById("complete"+id).checked)
+        }
+
+        async function changerCompleteSousTache(id){
+            changerSousTache(id,undefined,document.getElementById("sous-tache-complete"+id).checked)
+        }
+
+
+
+        //prompt templates
+        async function promptBool(title, left, right){
+            document.getElementById("prompt-title").innerText = title
+            document.getElementById("prompt-input-container").style.flexDirection = "row"
+
+            let inputs = `
+                <p class="fake-button" id="prompt-left" onclick="promptData = true">${left}</p>
+                <p class="fake-button" id="prompt-right" onclick="promptData = false">${right}</p>
+            `
+
+            document.getElementById("prompt-input-container").innerHTML = inputs
+
+            document.getElementById("prompt").style.display = "flex"
+
+            return new Promise((resolve)=>{
+                document.getElementById("prompt-left").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    resolve(true);
+                }
+                document.getElementById("prompt-right").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    resolve(false);
+                }
+            })
+        }
+
+        async function promptText(title, label = "", placeholder = "", submit = "Confirmer"){
+            document.getElementById("prompt-title").innerText = title
+            document.getElementById("prompt-input-container").style.flexDirection = "column"
+
+            let inputs = `
+                <div class="label-input-pair">
+                    <label>${label}</label>
+                    <input type="text" id="prompt-input-text" value="${placeholder}">
+                </div>
+                <div class="label-input-pair">
+                    <p class="fake-button" id="prompt-submit">${submit}</p>
+                    <p class="fake-button" id="prompt-cancel">Cancel</p>
+                </div>
+            `
+
+            document.getElementById("prompt-input-container").innerHTML = inputs
+
+            document.getElementById("prompt").style.display = "flex"
+
+            return new Promise((resolve, reject)=>{
+                document.getElementById("prompt-submit").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    let text = document.getElementById("prompt-input-text").value
+
+                    if (text)
+                        resolve(text)
+                    else{
+                        newAlert("Aucune modification effectué.", true)
+                        errorField(document.getElementById("prompt-input-text"))
+                    }
+                }
+                document.getElementById("prompt-cancel").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    reject();
+                }
+            })
+        }
+
+        async function promptTextArea(title, label = "", placeholder = "", submit = "Confirmer"){
+            document.getElementById("prompt-title").innerText = title
+            document.getElementById("prompt-input-container").style.flexDirection = "column"
+
+            let inputs = `
+                <div class="label-input-pair">
+                    <label>${label}</label>
+                    <textarea id="prompt-input-textarea">${placeholder}</textarea>
+                </div>
+                <div class="label-input-pair">
+                    <p class="fake-button" id="prompt-submit">${submit}</p>
+                    <p class="fake-button" id="prompt-cancel">Cancel</p>
+                </div>
+            `
+
+            document.getElementById("prompt-input-container").innerHTML = inputs
+
+            document.getElementById("prompt").style.display = "flex"
+
+            return new Promise((resolve, reject)=>{
+                document.getElementById("prompt-submit").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    let text = document.getElementById("prompt-input-textarea").value
+
+                    if (text)
+                        resolve(text)
+                    else{
+                        newAlert("Aucune modification effectué.", true)
+                        errorField(document.getElementById("prompt-input-textarea"))
+                    }
+                }
+                document.getElementById("prompt-cancel").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    reject();
+                }
+            })
+        }
+
+        async function promptDate(title, label = "", submit = "Confirmer"){
+            document.getElementById("prompt-title").innerText = title
+            document.getElementById("prompt-input-container").style.flexDirection = "column"
+
+            let inputs = `
+                <div class="label-input-pair">
+                    <label>${label}</label>
+                    <input type="date" id="prompt-input-date">
+                </div>
+                <div class="label-input-pair">
+                    <p class="fake-button" id="prompt-submit">${submit}</p>
+                    <p class="fake-button" id="prompt-cancel">Cancel</p>
+                </div>
+            `
+
+            document.getElementById("prompt-input-container").innerHTML = inputs
+
+            document.getElementById("prompt").style.display = "flex"
+
+            return new Promise((resolve, reject)=>{
+                document.getElementById("prompt-submit").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    let date = document.getElementById("prompt-input-date").value
+
+                    if (date)
+                        resolve(date)
+                    else{
+                        newAlert("Insérez une date!", true)
+                        errorField(document.getElementById("prompt-input-date"))
+                    }
+                }
+                document.getElementById("prompt-cancel").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    reject();
+                }
+            })
+        }
+
+        async function promptAjouter(){
+            document.getElementById("prompt-title").innerText = "Créer une tâche"
+            document.getElementById("prompt-input-container").style.flexDirection = "column"
+
+            let inputs = `
+                <div class="label-input-pair">
+                    <label>Titre</label>
+                    <input type="text" id="input-titre">
+                </div>
+                <div class="label-input-pair">
+                    <label>Description</label>
+                    <textarea id="input-desc"></textarea>
+                </div>
+                <div class="label-input-pair">
+                    <label>Échéance</label>
+                    <input type="date" id="input-echeance">
+                </div>
+                <div class="label-input-pair">
+                    <p class="fake-button" id="input-ajouter">Ajouter</p>
+                    <p class="fake-button" id="input-cancel">Cancel</p>
+                </div> 
+                
+            `
+
+            document.getElementById("prompt-input-container").innerHTML = inputs
+
+            document.getElementById("prompt").style.display = "flex"
+
+            return new Promise((resolve, reject)=>{
+                document.getElementById("input-ajouter").onclick = () => {
+                    let titre = document.getElementById("input-titre").value
+                    let desc = document.getElementById("input-desc").value
+                    let echeance = document.getElementById("input-echeance").value
+                    
+                    let doReturn = false
+                    if (!titre){
+                        newAlert("Le titre ne peut pas être vide!", true)
+                        errorField(document.getElementById("input-titre"))
+                        doReturn = true
+                    }
+                    if (!desc){
+                        newAlert("La description ne peut pas être vide!", true)
+                        errorField(document.getElementById("input-desc"))
+                        doReturn = true
+                    }
+                    if (!echeance){
+                        newAlert("L'échéance ne peut pas être vide!", true)
+                        errorField(document.getElementById("input-echeance"))
+                        doReturn = true
+                    }
+
+                    if (doReturn) return
+                        
+
+                    document.getElementById("prompt").style.display = "none";
+
+                    resolve({
+                        titre:titre,
+                        description:desc,
+                        date_echeance:echeance
+                    })
+                };
+                document.getElementById("input-cancel").onclick = () => {
+                    document.getElementById("prompt").style.display = "none";
+                    reject()
+                }
+            })
+        }
+
+        for (box of document.getElementsByClassName("complete")){
+            completer(box.id.substring(8))
+        }
+    </script>
+</body>
+</html>
