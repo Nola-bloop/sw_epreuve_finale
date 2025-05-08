@@ -44,7 +44,7 @@ let module = {
     creerTache: function (userId, titre, description, date_echeance){
         return new Promise((resolve, reject) => {
             db.query(
-                'INSERT INTO tache (utilisateur_id, titre, description, date_debut, date_echeance, complete) VALUES ($1, $2, $3, NOW(), $4, 0)',
+                'INSERT INTO tache (utilisateur_id, titre, description, date_debut, date_echeance, complete) VALUES ($1, $2, $3, NOW(), $4, false)',
                 [userId, titre, description, date_echeance],
                 (erreur, resultat) => {
                     if (erreur) {
@@ -64,7 +64,7 @@ let module = {
     creerSousTache: function (tache_id, titre){
         return new Promise((resolve, reject) => {
             db.query(
-                'INSERT INTO sous_tache (tache_id, titre, complete) VALUES ($1, $2, 0)',
+                'INSERT INTO sous_tache (tache_id, titre, complete) VALUES ($1, $2, false)',
                 [tache_id, titre],
                 (erreur, _) => {
                     if (erreur) {
@@ -82,6 +82,10 @@ let module = {
     },
 
     modifierTache: function (uid, tacheId, titre, description, date_echeance, complete){
+        if (complete === 0) {complete = false} 
+        if (complete === 1) {complete = true}
+
+
         return new Promise((resolve, reject) => {
             db.query(
                 'UPDATE tache SET titre = $1, description = $2, date_echeance = $3, complete = $4 WHERE id = $5 AND utilisateur_id = $6',
@@ -102,6 +106,8 @@ let module = {
     },
 
     modifierSousTache: function (uid, sousTacheId, titre, complete){
+        if (complete === 0) {complete = false} 
+        if (complete === 1) {complete = true}
         return new Promise((resolve, reject) => {
             db.query(
                 `UPDATE sous_tache
