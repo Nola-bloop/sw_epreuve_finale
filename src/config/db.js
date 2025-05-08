@@ -1,8 +1,10 @@
-import mysql from "mysql2";
-import dotenv from "dotenv"
-dotenv.config()
+import pkg from 'pg';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const db = mysql.createPool({
+const { Pool } = pkg;
+
+const db = new Pool({
     connectionLimit: process.env.MYSQL_CONNECTION_LIMIT,
     host: process.env.MYSQL_HOST,
     user: process.env.MYSQL_USER,
