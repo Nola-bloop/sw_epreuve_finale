@@ -248,44 +248,49 @@
                                             "type":"array",
                                             "items":{
                                                 "type":"object",
-                                                "id":{
-                                                    "type":"integer",
-                                                    "example":"0"
-                                                },
-                                                "titre": {
-                                                    "type": "string",
-                                                    "example": "Titre de ma tâche"
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": "Description de ma tâche"
-                                                },
-                                                "date_echeance": {
-                                                    "type": "string",
-                                                    "example": "2025-05-09"
-                                                },
-                                                "date_debut":{
-                                                    "type": "string",
-                                                    "example": "2025-04-25"
-                                                },
-                                                "complete":{
-                                                    "type":"integer",
-                                                    "example":"0"
-                                                },
-                                                "sousTaches":{
-                                                    "type":"array",
-                                                    "items":{
-                                                        "titre":{
-                                                            "type":"string",
-                                                            "example":"Titre de sous-tâche"
-                                                        },
-                                                        "complete":{
-                                                            "type":"integer",
-                                                            "example":"0"
-                                                        },
-                                                        "id":{
-                                                            "type":"integer",
-                                                            "example":"0"
+                                                "properties":{
+                                                    "id":{
+                                                        "type":"integer",
+                                                        "example":"0"
+                                                    },
+                                                    "titre": {
+                                                        "type": "string",
+                                                        "example": "Titre de ma tâche"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Description de ma tâche"
+                                                    },
+                                                    "date_echeance": {
+                                                        "type": "string",
+                                                        "example": "2025-05-09"
+                                                    },
+                                                    "date_debut":{
+                                                        "type": "string",
+                                                        "example": "2025-04-25"
+                                                    },
+                                                    "complete":{
+                                                        "type":"integer",
+                                                        "example":"0"
+                                                    },
+                                                    "sousTaches":{
+                                                        "type":"array",
+                                                        "items":{
+                                                            "type":"object",
+                                                            "properties":{
+                                                                    "titre":{
+                                                                    "type":"string",
+                                                                    "example":"Titre de sous-tâche"
+                                                                },
+                                                                "complete":{
+                                                                    "type":"integer",
+                                                                    "example":"0"
+                                                                },
+                                                                "id":{
+                                                                    "type":"integer",
+                                                                    "example":"0"
+                                                                }
+                                                            }
                                                         }
                                                     }
                                                 }
