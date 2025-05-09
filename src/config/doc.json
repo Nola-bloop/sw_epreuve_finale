@@ -1,0 +1,75 @@
+{
+    "openapi": "3.1.0",
+    "info":{
+        "title": "epreuvefinale",
+        "summary": "Gestionnaire de tâches et de sous-tâches",
+        "description": "L'API permet de faire la gestion de tâches et de sous-tâches. il y a aussi une section pour les utilisateurs (se connecter, s'enregistrer, etc.). Le CRUD a été fait pour les tâches et les sous-tâches",
+        "contact": {
+            "name": "API dev",
+            "url": "-",
+            "email": "Nola.Bloop@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "https://https://sw-epreuve-finale.onrender.com/",
+            "description": "Serveur en ligne"
+        }
+    ],
+    "paths" : {
+        "api/utilisateurs" : { 
+            "get" : {
+                "description" : "Obtenir la clé d'api d'un utilisateur avec son courriel et mot de passe OU rafraichir la clé d'api avec la clé actuelle. Il faut soit envoyer une clé, ou le courriel et le mot de passe.",
+                "summary" : "Obtenir/Rafraichir la clé d'api",
+                "tags" : ["Utilisateurs"],
+                "parameters" : [
+                    {
+                        "in": "query",
+                        "name": "courriel",
+                        "description": "Le courriel de l'utilisateur si on veut obtenir sa clé",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "password",
+                        "description": "Le mot de passe de l'utilisateur si on veut obtenir sa clé",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false
+                    },
+                    {
+                        "in": "query",
+                        "name": "cle",
+                        "description": "La clé d'api actuelle, si on veut rafraichir la clé",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clé d'API trouvée avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cle_api": {
+                                            "type": "string",
+                                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }   
+        }
+    }
+}

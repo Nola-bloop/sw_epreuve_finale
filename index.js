@@ -2,6 +2,18 @@ import express from "express";
 import dotenv from "dotenv";
 import path from "path";
 
+// Importation du module swagger-ui-express
+import swaggerUi from 'swagger-ui-express';
+// Le fichier qui contient la documentation au format JSON, ajustez selon votre projet
+import fs from 'fs';
+const swaggerDocument = JSON.parse(fs.readFileSync('./src/config/documentation.json', 'utf8'));
+
+// Options le l'interface, changez le titre "Demo API" pour le nom de votre projet 
+const swaggerOptions = {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "epreuvefinale"
+};
+
 const __dirname = path.resolve(path.dirname(''));
 const options = { root: path.join(__dirname) };
 
@@ -26,7 +38,8 @@ app.get("/", (_, res)=>{
 })
 //==========>
 
-
+// La route à utiliser pour accéder au rendu visuel de la documentation
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur le port ${PORT}`);

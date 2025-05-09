@@ -25,18 +25,17 @@ module.post('/', (req, res) => {
 })
 
 //get de la clé d'api
-// /api/utilisateurs?cle=3178327539842732[&new=true]
+// /api/utilisateurs?cle=3178327539842732
 module.get('/', (req, res) => {
-    if (req.query.new){
+    if (req.query.cle){
         let cle = req.query.cle
-        let mode = req.query.new
 
         if (!cle){
             res.status(400)
             res.send({
                 erreur: "La clé d'api n'a pas été envoyé.",
                 code: "n/a",
-                message: "Il manque une valeur pour la connexion.",
+                message: "Il manque une valeur pour le rafraichissement.",
             })
             return
         }
