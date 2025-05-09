@@ -224,13 +224,15 @@
                 "description" : "Lister toutes les tâches et les sous-tâches",
                 "summary" : "Lister toutes les tâches et les sous-tâches",
                 "tags" : ["Tâches"],
-                "headers": [
+                "parameters": [
                     {
-                        "description": "La clé d'apid à utiliser",
-                        "authentification": {
-                            "type": "string",
-                            "example":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
-                        }
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
                     }
                 ],
                 "responses": {
