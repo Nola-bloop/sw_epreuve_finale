@@ -6,7 +6,7 @@ import path from "path";
 import swaggerUi from 'swagger-ui-express';
 // Le fichier qui contient la documentation au format JSON, ajustez selon votre projet
 import fs from 'fs';
-const swaggerDocument = JSON.parse(fs.readFileSync('./src/config/documentation.json', 'utf8'));
+const swaggerDocument = JSON.parse(fs.readFileSync('./src/config/doc.json', 'utf8'));
 
 // Options le l'interface, changez le titre "Demo API" pour le nom de votre projet 
 const swaggerOptions = {

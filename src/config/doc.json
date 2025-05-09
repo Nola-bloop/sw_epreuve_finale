@@ -68,7 +68,68 @@
                                 }
                             }
                         }
+                    },
+                    "200": {
+                        "description": "Clé d'API rafraichie avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "cle_api": {
+                                            "type": "string",
+                                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                }
             }   
         }
     }
