@@ -152,7 +152,7 @@
                                     },
                                     "courriel":{
                                         "type":"string",
-                                        "exemple":"patlepatnormousse@gmail.com"
+                                        "example":"patlepatnormousse@gmail.com"
                                     },
                                     "password":{
                                         "type":"string",
@@ -230,7 +230,8 @@
                         "name": "authentification",
                         "description": "la clé d'API à utiliser",
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
                         },
                         "required": true
                     }
@@ -246,6 +247,7 @@
                                         "resultats":{
                                             "type":"array",
                                             "items":{
+                                                "type":"object",
                                                 "id":{
                                                     "type":"integer",
                                                     "example":"0"
@@ -313,8 +315,95 @@
                                 }
                             }
                         }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }   
+            },
+            "post":{
+                "description":"Ajouter une tâche",
+                "summary":"Ajouter une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses":{
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
