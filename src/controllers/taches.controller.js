@@ -12,7 +12,7 @@ async function getUID(cle, res){
         if (err.code === "n/a"){
             res.status(404)
         }else{
-            logs.insert("Erreur lors de la recherche d'un utilisateur par son courriel et mot de passe.", err)
+            logs.insert("Erreur lors de la recherche d'un utilisateur par sa clé d'api.", err)
             res.status(500);
         }
         res.send(err);

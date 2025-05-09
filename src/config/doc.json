@@ -69,7 +69,7 @@
                             }
                         }
                     },
-                    "200": {
+                    "201": {
                         "description": "Clé d'API rafraichie avec succès.",
                         "content": {
                             "application/json": {
@@ -130,7 +130,190 @@
                         }
                     }
                 }
-            }   
+            },
+            "post" : {
+                "description" : "Créer un nouvel utilisateur avec son courriel, son nom, son prénom et son mot de passe",
+                "summary" : "Créer un nouvel utilisateur",
+                "tags" : ["Utilisateurs"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "prenom":{
+                                        "type":"string",
+                                        "example": "Pat"
+                                    },
+                                    "nom":{
+                                        "type":"string",
+                                        "example":"Normousse"
+                                    },
+                                    "courriel":{
+                                        "type":"string",
+                                        "exemple":"patlepatnormousse@gmail.com"
+                                    },
+                                    "password":{
+                                        "type":"string",
+                                        "example":"pat#1:4evr"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description": "Utilisateur créé avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "prenom":{
+                                            "type":"string",
+                                            "example": "Pat"
+                                        },
+                                        "nom":{
+                                            "type":"string",
+                                            "example":"Normousse"
+                                        },
+                                        "courriel":{
+                                            "type":"string",
+                                            "exemple":"patlepatnormousse@gmail.com"
+                                        },
+                                        "password":{
+                                            "type":"string",
+                                            "example":"pat#1:4evr"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/taches":{
+            "get" :{
+                "description" : "Lister toutes les tâches et les sous-tâches",
+                "summary" : "Lister toutes les tâches et les sous-tâches",
+                "tags" : ["Tâches"],
+                "headers": [
+                    {
+                        "description": "La clé d'apid à utiliser",
+                        "authentification": {
+                            "type": "string",
+                            "example":"XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tâches trouvées avec succès.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "resultats":{
+                                            "type":"array",
+                                            "items":{
+                                                "id":{
+                                                    "type":"integer",
+                                                    "example":"0"
+                                                },
+                                                "titre": {
+                                                    "type": "string",
+                                                    "example": "Titre de ma tâche"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Description de ma tâche"
+                                                },
+                                                "date_echeance": {
+                                                    "type": "string",
+                                                    "example": "2025-05-09"
+                                                },
+                                                "date_debut":{
+                                                    "type": "string",
+                                                    "example": "2025-04-25"
+                                                },
+                                                "complete":{
+                                                    "type":"integer",
+                                                    "example":"0"
+                                                },
+                                                "sousTaches":{
+                                                    "type":"array",
+                                                    "items":{
+                                                        "titre":{
+                                                            "type":"string",
+                                                            "example":"Titre de sous-tâche"
+                                                        },
+                                                        "complete":{
+                                                            "type":"integer",
+                                                            "example":"0"
+                                                        },
+                                                        "id":{
+                                                            "type":"integer",
+                                                            "example":"0"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                }   
+            }
         }
     }
 }
