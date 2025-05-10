@@ -363,7 +363,620 @@
                         "required": true
                     }
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "titre":{
+                                        "type":"string",
+                                        "example": "Titre de ma tâche"
+                                    },
+                                    "description":{
+                                        "type":"string",
+                                        "example":"Une description quelconque..."
+                                    },
+                                    "date_echeance":{
+                                        "type":"string",
+                                        "example":"2026-04-04"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses":{
+                    "200":{
+                        "description":"Ajout effectué avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "donnesUtilises":{
+                                            "type":"object",
+                                            "properties":{
+                                                "titre": {
+                                                    "type": "string",
+                                                    "example": "Titre de ma tâche"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Description de ma tâche"
+                                                },
+                                                "date_echeance": {
+                                                    "type": "string",
+                                                    "example": "2025-05-09"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "description":"Modifier une tâche",
+                "summary":"Modifier une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "tache_id":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    },
+                                    "titre":{
+                                        "type":"string",
+                                        "example": "Titre de ma tâche"
+                                    },
+                                    "description":{
+                                        "type":"string",
+                                        "example":"Une description quelconque..."
+                                    },
+                                    "date_echeance":{
+                                        "type":"string",
+                                        "example":"2026-04-04"
+                                    },
+                                    "complete":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modification effectuée avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "donnesUtilises":{
+                                            "type":"object",
+                                            "properties":{
+                                                "tache_id": {
+                                                    "type": "integer",
+                                                    "example": "1"
+                                                },
+                                                "titre": {
+                                                    "type": "string",
+                                                    "example": "Titre de ma tâche"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Description de ma tâche"
+                                                },
+                                                "date_echeance": {
+                                                    "type": "string",
+                                                    "example": "2025-05-09"
+                                                },
+                                                "complete": {
+                                                    "type": "integer",
+                                                    "example": "0"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "description":"Supprimer une tâche",
+                "summary":"Supprimer une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "tache_id":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Suppression effectuée avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "message":{
+                                            "type":"string",
+                                            "example":"Tache supprimée avec succès."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/taches/sous":{
+            "post":{
+                "description":"Ajouter une tâche",
+                "summary":"Ajouter une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "tache_id":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    },
+                                    "titre":{
+                                        "type":"string",
+                                        "example": "Titre de ma tâche"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Ajout effectué avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "donnesUtilises":{
+                                            "type":"object",
+                                            "properties":{
+                                                "titre": {
+                                                    "type": "string",
+                                                    "example": "Titre de ma tâche"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Description de ma tâche"
+                                                },
+                                                "date_echeance": {
+                                                    "type": "string",
+                                                    "example": "2025-05-09"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put":{
+                "description":"Modifier une tâche",
+                "summary":"Modifier une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "tache_id":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    },
+                                    "titre":{
+                                        "type":"string",
+                                        "example": "Titre de ma tâche"
+                                    },
+                                    "description":{
+                                        "type":"string",
+                                        "example":"Une description quelconque..."
+                                    },
+                                    "date_echeance":{
+                                        "type":"string",
+                                        "example":"2026-04-04"
+                                    },
+                                    "complete":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Modification effectuée avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "donnesUtilises":{
+                                            "type":"object",
+                                            "properties":{
+                                                "sousTacheId": {
+                                                    "type": "integer",
+                                                    "example": "1"
+                                                },
+                                                "titre": {
+                                                    "type": "string",
+                                                    "example": "Titre de ma tâche"
+                                                },
+                                                "complete": {
+                                                    "type": "integer",
+                                                    "example": "0"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clé d'API introuvable.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "n/a"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Aucun utilisateur avec le courriel ___ et le mot de passe ___"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erreur du serveur.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "erreur": {
+                                            "type": "string",
+                                            "example": "erreur du serveur"
+                                        },
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SQL state"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SQL error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete":{
+                "description":"Supprimer une tâche",
+                "summary":"Supprimer une tâche",
+                "tags":["Tâches"],
+                "parameters":[
+                    {
+                        "in": "headers",
+                        "name": "authentification",
+                        "description": "la clé d'API à utiliser",
+                        "schema": {
+                            "type": "string",
+                            "example": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+                        },
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "sous_tache_id":{
+                                        "type":"integer",
+                                        "example":"1"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "description":"Suppression effectuée avec succès",
+                        "content":{
+                            "application/json":{
+                                "schema":{
+                                    "type":"object",
+                                    "properties":{
+                                        "message":{
+                                            "type":"string",
+                                            "example":"Tache supprimée avec succès."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "404": {
                         "description": "Clé d'API introuvable.",
                         "content": {
